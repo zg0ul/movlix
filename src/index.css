@@ -21,10 +21,14 @@
 }
 
 @layer base {
+  :root {
+    overflow-x: hidden;
+  }
+  
   body {
     font-family: "DM Sans", serif;
     font-optical-sizing: auto;
-    background: #030014;
+    background: var(--color-primary);
   }
 
   h1 {
