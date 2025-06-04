@@ -24,7 +24,7 @@
   :root {
     overflow-x: hidden;
   }
-  
+
   body {
     font-family: "DM Sans", serif;
     font-optical-sizing: auto;
@@ -106,18 +106,25 @@
   }
 
   .movie-card {
-    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
+    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 cursor-pointer transition-transform hover:scale-105;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     & img {
-      @apply rounded-lg h-auto w-full;
+      @apply rounded-lg w-full object-cover;
+      height: 300px;
+      aspect-ratio: 2/3;
     }
 
     & h3 {
-      @apply text-white font-bold text-base line-clamp-1;
+      @apply text-white font-bold text-base line-clamp-1 mt-4;
     }
 
     & .content {
       @apply mt-2 flex flex-row items-center flex-wrap gap-2;
+      margin-top: auto;
+      padding-top: 0.5rem;
     }
 
     & .rating {
@@ -143,6 +150,327 @@
     & .content .year {
       @apply text-gray-100 font-medium text-base;
     }
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm;
+    /* Prevent any scroll on the overlay itself */
+    overscroll-behavior: contain;
+    touch-action: none;
+  }
+
+  .modal-content {
+    @apply relative max-w-4xl max-h-[90vh] w-full mx-4 bg-dark-100 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 ease-out;
+    animation: modalAppear 0.3s ease-out;
+  }
+
+  @keyframes modalAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .modal-close {
+    @apply absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-black/50 text-white text-2xl rounded-full hover:bg-black/70 transition-colors;
+  }
+
+  .modal-loading {
+    @apply flex items-center justify-center h-96;
+  }
+
+  .modal-loading .spinner {
+    @apply w-8 h-8 border-2 border-light-100/20 border-t-light-100 rounded-full animate-spin;
+  }
+
+  .modal-body {
+    @apply overflow-y-auto max-h-[90vh];
+  }
+
+  .modal-header {
+    @apply relative;
+  }
+
+  .modal-backdrop {
+    @apply w-full h-64 object-cover;
+  }
+
+  .modal-header-content {
+    @apply absolute inset-0 bg-gradient-to-t from-dark-100 via-dark-100/60 to-transparent flex items-end p-6;
+  }
+
+  .modal-poster {
+    @apply flex-shrink-0 mr-6;
+  }
+
+  .modal-poster img {
+    @apply w-32 h-48 object-cover rounded-lg shadow-lg;
+  }
+
+  .modal-info {
+    @apply flex-1 text-white;
+  }
+
+  .modal-info h1 {
+    @apply text-3xl font-bold mb-2 leading-tight;
+  }
+
+  .modal-meta {
+    @apply flex items-center gap-3 mb-3 text-sm;
+  }
+
+  .modal-meta .year {
+    @apply text-light-200;
+  }
+
+  .modal-meta .rating {
+    @apply bg-light-100/20 px-2 py-1 rounded text-light-100;
+  }
+
+  .modal-meta .runtime {
+    @apply text-light-200;
+  }
+
+  .modal-rating {
+    @apply flex items-center gap-2 mb-3;
+  }
+
+  .modal-rating img {
+    @apply w-5 h-5;
+  }
+
+  .modal-rating span:first-of-type {
+    @apply text-xl font-bold text-white;
+  }
+
+  .modal-rating .vote-count {
+    @apply text-sm text-gray-100;
+  }
+
+  .tagline {
+    @apply text-light-200 italic;
+  }
+
+  .modal-details {
+    @apply p-6 space-y-6;
+  }
+
+  .modal-section h3 {
+    @apply text-lg font-semibold text-white mb-2;
+  }
+
+  .modal-section p {
+    @apply text-gray-100 leading-relaxed;
+  }
+
+  .genres {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .genre-tag {
+    @apply bg-light-100/10 text-light-100 px-3 py-1 rounded-full text-sm;
+  }
+
+  .modal-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .production-companies {
+    @apply text-gray-100;
+  }
+
+  .company {
+    @apply inline;
+  }
+
+  .modal-error {
+    @apply flex items-center justify-center h-96 text-white;
+  }
+
+  /* Skeleton Loading Styles */
+  .movie-list-skeleton {
+    @apply grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4;
+  }
+
+  .movie-card-skeleton {
+    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 animate-pulse;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .skeleton-poster {
+    @apply w-full bg-gray-300/20 rounded-lg mb-4;
+    height: 300px;
+    aspect-ratio: 2/3;
+  }
+
+  .skeleton-content {
+    @apply space-y-3;
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .skeleton-title {
+    @apply h-4 bg-gray-300/20 rounded w-3/4;
+  }
+
+  .skeleton-meta {
+    @apply flex gap-2;
+  }
+
+  .skeleton-rating {
+    @apply h-3 bg-gray-300/20 rounded w-12;
+  }
+
+  .skeleton-year {
+    @apply h-3 bg-gray-300/20 rounded w-16;
+  }
+
+  /* Modal Skeleton Styles */
+  .skeleton-modal {
+    @apply p-6 animate-pulse;
+  }
+
+  .skeleton-header {
+    @apply relative mb-6;
+  }
+
+  .skeleton-backdrop {
+    @apply w-full h-64 bg-gray-300/20 rounded-lg;
+  }
+
+  .skeleton-header-content {
+    @apply absolute inset-0 bg-gradient-to-t from-dark-100 via-dark-100/60 to-transparent flex items-end p-6;
+  }
+
+  .skeleton-poster {
+    @apply w-32 h-48 bg-gray-300/20 rounded-lg mr-6;
+  }
+
+  .skeleton-info {
+    @apply flex-1 space-y-3;
+  }
+
+  .skeleton-title {
+    @apply h-8 bg-gray-300/20 rounded w-3/4;
+  }
+
+  .skeleton-meta {
+    @apply flex gap-3;
+  }
+
+  .skeleton-meta-item {
+    @apply h-4 bg-gray-300/20 rounded w-16;
+  }
+
+  .skeleton-rating {
+    @apply flex items-center gap-2;
+  }
+
+  .skeleton-star {
+    @apply w-5 h-5 bg-gray-300/20 rounded;
+  }
+
+  .skeleton-rating-text {
+    @apply h-4 bg-gray-300/20 rounded w-8;
+  }
+
+  .skeleton-tagline {
+    @apply h-4 bg-gray-300/20 rounded w-2/3;
+  }
+
+  .skeleton-content {
+    @apply space-y-6;
+  }
+
+  .skeleton-section {
+    @apply space-y-2;
+  }
+
+  .skeleton-section-title {
+    @apply h-5 bg-gray-300/20 rounded w-24;
+  }
+
+  .skeleton-section-title.small {
+    @apply h-4 w-20;
+  }
+
+  .skeleton-genres {
+    @apply flex gap-2;
+  }
+
+  .skeleton-genre {
+    @apply h-6 bg-gray-300/20 rounded-full w-16;
+  }
+
+  .skeleton-overview {
+    @apply space-y-2;
+  }
+
+  .skeleton-text-line {
+    @apply h-4 bg-gray-300/20 rounded;
+  }
+
+  .skeleton-text-line.short {
+    @apply w-2/3;
+  }
+
+  .skeleton-text-line.medium {
+    @apply w-1/2;
+  }
+
+  .skeleton-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  /* Movie Card Skeleton Styles */
+  .movie-card-skeleton {
+    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
+  }
+
+  .skeleton-poster-main {
+    @apply w-full h-64 bg-gray-600 rounded-lg animate-pulse;
+  }
+
+  .skeleton-card-content {
+    @apply mt-4 space-y-2;
+  }
+
+  .skeleton-card-title {
+    @apply h-5 bg-gray-600 rounded animate-pulse w-3/4;
+  }
+
+  .skeleton-card-meta {
+    @apply flex items-center gap-2 mt-2;
+  }
+
+  .skeleton-card-rating {
+    @apply flex items-center gap-1;
+  }
+
+  .skeleton-card-star {
+    @apply w-4 h-4 bg-gray-600 rounded animate-pulse;
+  }
+
+  .skeleton-card-rating-text {
+    @apply h-4 bg-gray-600 rounded animate-pulse w-8;
+  }
+
+  .skeleton-card-dot {
+    @apply w-1 h-1 bg-gray-600 rounded-full animate-pulse;
+  }
+
+  .skeleton-card-lang {
+    @apply h-4 bg-gray-600 rounded animate-pulse w-6;
+  }
+
+  .skeleton-card-year {
+    @apply h-4 bg-gray-600 rounded animate-pulse w-12;
   }
 }
 

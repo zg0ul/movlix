@@ -1,7 +1,9 @@
-import Search from "./components/search";
+import Search from "./components/Search";
 import { useState, useEffect } from "react";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
+import MovieModal from "./components/MovieModal";
+import MovieListSkeleton from "./components/MovieListSkeleton";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
 
@@ -24,10 +26,22 @@ function App() {
   const [trendingMovies, settrendingMovies] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [debouncedSearchTerm, setdebouncedSearchTerm] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Debounce the search term to prevent making too many API requests
   // by waiting for the user to stop typing for 500ms
   useDebounce(() => setdebouncedSearchTerm(searchTerm), 500, [searchTerm]);
+
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedMovie(null);
+  };
 
   const fetchMovies = async (query = "") => {
     setisLoading(true);
@@ -74,8 +88,8 @@ function App() {
   useEffect(() => {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
-  
-  useEffect(() => { 
+
+  useEffect(() => {
     loadTrendingMovies();
   }, []); // Fetch trending movies on initial load
 
@@ -110,18 +124,28 @@ function App() {
           <h2>All Movies</h2>
 
           {isLoading ? (
-            <Spinner />
+            <MovieListSkeleton count={8} />
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <MovieCard key={movie.key} movie={movie} />
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onCardClick={handleMovieClick}
+                />
               ))}
             </ul>
           )}
         </section>
       </div>
+
+      <MovieModal
+        movie={selectedMovie}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </main>
   );
 }
