@@ -105,6 +105,14 @@
     }
   }
 
+  .movies-header {
+    @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6;
+  }
+
+  .results-count {
+    @apply text-light-200 text-sm font-medium;
+  }
+
   .movie-card {
     @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 cursor-pointer transition-transform hover:scale-105;
     display: flex;
@@ -471,6 +479,123 @@
 
   .skeleton-card-year {
     @apply h-4 bg-gray-600 rounded animate-pulse w-12;
+  }
+
+  /* Filter Component Styles */
+  .filter-section {
+    @apply bg-dark-100 p-6 rounded-2xl shadow-inner shadow-light-100/10 mb-8;
+  }
+
+  .filter-header {
+    @apply flex justify-between items-center mb-6;
+  }
+
+  .filter-header h3 {
+    @apply text-xl font-bold text-white;
+  }
+
+  .clear-filters-btn {
+    @apply px-4 py-2 bg-light-100/10 text-light-100 rounded-lg hover:bg-light-100/20 transition-colors text-sm font-medium;
+  }
+
+  .filter-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4;
+  }
+
+  .filter-group {
+    @apply flex flex-col gap-2;
+  }
+
+  .filter-group label {
+    @apply text-sm font-medium text-light-200;
+  }
+
+  .filter-group select,
+  .filter-group input {
+    @apply w-full px-3 py-2 bg-light-100/5 border border-light-100/20 rounded-lg text-white placeholder-light-200 focus:outline-none focus:border-light-100/40 transition-colors;
+  }
+
+  .filter-group select:focus,
+  .filter-group input:focus {
+    @apply ring-2 ring-light-100/20;
+  }
+
+  .filter-group select option {
+    @apply bg-dark-100 text-white;
+  }
+
+  /* Pagination Component Styles */
+  .pagination {
+    @apply flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-8 border-t border-light-100/20;
+  }
+
+  .pagination-info {
+    @apply text-light-200 text-sm;
+  }
+
+  .pagination-controls {
+    @apply flex items-center gap-2;
+  }
+
+  .pagination-numbers {
+    @apply flex items-center gap-1;
+  }
+
+  .pagination-btn {
+    @apply px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 border border-transparent;
+    @apply text-light-200 hover:text-white hover:bg-light-100/10;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-light-200;
+  }
+
+  .pagination-btn-prev,
+  .pagination-btn-next {
+    @apply flex items-center gap-2 px-4;
+  }
+
+  .pagination-btn-active {
+    @apply bg-light-100/20 text-white border-light-100/30;
+  }
+
+  .pagination-dots {
+    @apply cursor-default hover:bg-transparent hover:text-light-200;
+  }
+
+  /* Mobile responsive adjustments */
+  @media (max-width: 640px) {
+    .pagination {
+      @apply flex-col gap-3;
+    }
+
+    .pagination-controls {
+      @apply flex-wrap justify-center;
+    }
+
+    .pagination-btn-prev,
+    .pagination-btn-next {
+      @apply px-3;
+    }
+
+    .pagination-btn-prev span,
+    .pagination-btn-next span {
+      @apply hidden;
+    }
+  }
+
+  /* No movies found state */
+  .no-movies {
+    @apply flex flex-col items-center justify-center py-16 text-center;
+  }
+
+  .no-movies img {
+    @apply w-32 h-32 object-contain opacity-50 mb-4;
+  }
+
+  .no-movies h3 {
+    @apply text-xl font-bold text-white mb-2;
+  }
+
+  .no-movies p {
+    @apply text-light-200 max-w-md;
   }
 }
 
