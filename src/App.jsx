@@ -1,6 +1,7 @@
 import Search from "./components/Search";
 import Filter from "./components/Filter";
 import Pagination from "./components/Pagination";
+import SEO from "./components/SEO";
 import { useState, useEffect, useCallback } from "react";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
@@ -158,88 +159,105 @@ function App() {
   }, []); // Fetch trending movies on initial load
 
   return (
-    <main>
-      <div className="pattern" />
-      <div className="wrapper">
-        <header>
-          <img src="./hero.png" alt="Hero Banner" />
-          <h1>
-            Find <span className="text-gradient">Movies</span> You'll Enjoy
-            Without the Hassle
-          </h1>
-          <Search searchTerm={searchTerm} setsearchTerm={setsearchTerm} />
-        </header>
+    <>
+      <SEO
+        title={
+          searchTerm ? `Search results for "${searchTerm}"` : "Discover Movies"
+        }
+        description={
+          searchTerm
+            ? `Find movies matching "${searchTerm}". Browse through ${totalResults} results with advanced filtering.`
+            : "Discover trending movies with advanced filtering, real-time search, and personalized recommendations."
+        }
+        keywords={searchTerm ? `${searchTerm}, movies, search` : undefined}
+      />
 
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending Movies</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+      <main>
+        <div className="pattern" />
+        <div className="wrapper ">
+          <header>
+            <img src="./hero.png" alt="Hero Banner" />
+            <h1>
+              Find <span className="text-gradient">Movies</span> You'll Enjoy
+            </h1>
+            <Search searchTerm={searchTerm} setsearchTerm={setsearchTerm} />
+          </header>
 
-        <section className="all-movies">
-          <div className="movies-header">
-            <h2>All Movies</h2>
-            {totalResults > 0 && (
-              <p className="results-count">
-                Showing {(currentPage - 1) * 20 + 1}-
-                {Math.min(currentPage * 20, totalResults)} of{" "}
-                {totalResults.toLocaleString()} results
-              </p>
-            )}
-          </div>
-
-          <Filter filters={filters} setFilters={setFilters} />
-
-          {isLoading ? (
-            <MovieListSkeleton count={8} />
-          ) : errorMessage ? (
-            <p className="text-red-500">{errorMessage}</p>
-          ) : movieList.length === 0 ? (
-            <div className="no-movies">
-              <img src="/no-movie.png" alt="No movies found" />
-              <h3>No movies found</h3>
-              <p>
-                Try adjusting your search or filters to find what you're looking
-                for.
-              </p>
-            </div>
-          ) : (
-            <>
+          {trendingMovies.length > 0 && (
+            <section className="trending">
+              <h2>Trending Movies</h2>
               <ul>
-                {movieList.map((movie) => (
-                  <MovieCard
-                    key={movie.id}
-                    movie={movie}
-                    onCardClick={handleMovieClick}
-                  />
+                {trendingMovies.map((movie, index) => (
+                  <li key={movie.$id}>
+                    <p>{index + 1}</p>
+                    <img
+                      src={movie.poster_url}
+                      alt={`${movie.title || "Movie"} trending poster`}
+                      loading="lazy"
+                    />
+                  </li>
                 ))}
               </ul>
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-                isLoading={isLoading}
-              />
-            </>
+            </section>
           )}
-        </section>
-      </div>
 
-      <MovieModal
-        movie={selectedMovie}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      />
-    </main>
+          <section className="all-movies">
+            <div className="movies-header">
+              <h2>All Movies</h2>
+              {totalResults > 0 && (
+                <p className="results-count">
+                  Showing {(currentPage - 1) * 20 + 1}-
+                  {Math.min(currentPage * 20, totalResults)} of{" "}
+                  {totalResults.toLocaleString()} results
+                </p>
+              )}
+            </div>
+
+            <Filter filters={filters} setFilters={setFilters} />
+
+            {isLoading ? (
+              <MovieListSkeleton count={8} />
+            ) : errorMessage ? (
+              <p className="text-red-500">{errorMessage}</p>
+            ) : movieList.length === 0 ? (
+              <div className="no-movies">
+                <img src="/no-movie.png" alt="No movies found" />
+                <h3>No movies found</h3>
+                <p>
+                  Try adjusting your search or filters to find what you're
+                  looking for.
+                </p>
+              </div>
+            ) : (
+              <>
+                <ul>
+                  {movieList.map((movie) => (
+                    <MovieCard
+                      key={movie.id}
+                      movie={movie}
+                      onCardClick={handleMovieClick}
+                    />
+                  ))}
+                </ul>
+
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  isLoading={isLoading}
+                />
+              </>
+            )}
+          </section>
+        </div>
+
+        <MovieModal
+          movie={selectedMovie}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
+      </main>
+    </>
   );
 }
 

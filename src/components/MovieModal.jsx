@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SkeletonLoader from "./SkeletonLoader";
+import SEO from "./SEO";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -90,155 +91,172 @@ function MovieModal({ movie, isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>
-          ×
-        </button>
+    <>
+      {movie && (
+        <SEO
+          title={movie.title}
+          description={movie.overview}
+          image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          keywords={`${movie.title}, movie, ${
+            movie.release_date?.split("-")[0]
+          }, rating ${movie.vote_average}`}
+          type="video.movie"
+          movie={movie}
+        />
+      )}
 
-        {isLoading ? (
-          <SkeletonLoader />
-        ) : movieDetails ? (
-          <div className="modal-body">
-            {/* Header with backdrop */}
-            <div className="modal-header">
-              {movieDetails.backdrop_path && (
-                <img
-                  src={`${BACKDROP_IMAGE_URL}${movieDetails.backdrop_path}`}
-                  alt={movieDetails.title}
-                  className="modal-backdrop"
-                />
-              )}
-              <div className="modal-header-content">
-                <div className="modal-poster">
+      <div className="modal-overlay custom-scrollbar" onClick={onClose}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <button className="modal-close" onClick={onClose}>
+            ×
+          </button>
+
+          {isLoading ? (
+            <SkeletonLoader />
+          ) : movieDetails ? (
+            <div className="modal-body">
+              {/* Header with backdrop */}
+              <div className="modal-header">
+                {movieDetails.backdrop_path && (
                   <img
-                    src={
-                      movieDetails.poster_path
-                        ? `${BASE_IMAGE_URL}${movieDetails.poster_path}`
-                        : "/no-movie.png"
-                    }
-                    alt={movieDetails.title}
+                    src={`${BACKDROP_IMAGE_URL}${movieDetails.backdrop_path}`}
+                    alt={`${movieDetails.title} backdrop`}
+                    className="modal-backdrop"
+                    loading="lazy"
                   />
-                </div>
-                <div className="modal-info">
-                  <h1>{movieDetails.title}</h1>
-                  <div className="modal-meta">
-                    <span className="year">
-                      {movieDetails.release_date?.split("-")[0]}
-                    </span>
-                    <span className="rating">PG-13</span>
-                    <span className="runtime">
-                      {formatRuntime(movieDetails.runtime)}
-                    </span>
+                )}
+                <div className="modal-header-content">
+                  <div className="modal-poster">
+                    <img
+                      src={
+                        movieDetails.poster_path
+                          ? `${BASE_IMAGE_URL}${movieDetails.poster_path}`
+                          : "/no-movie.png"
+                      }
+                      alt={`${movieDetails.title} movie poster`}
+                      loading="lazy"
+                    />
                   </div>
-                  <div className="modal-rating">
-                    <img src="/star.svg" alt="Star" />
-                    <span>{movieDetails.vote_average?.toFixed(1)}</span>
-                    <span className="vote-count">
-                      ({movieDetails.vote_count?.toLocaleString()})
-                    </span>
-                  </div>
-                  {movieDetails.tagline && (
-                    <p className="tagline">{movieDetails.tagline}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="modal-details">
-              <div className="modal-section">
-                <h3>Genres</h3>
-                <div className="genres">
-                  {movieDetails.genres?.map((genre) => (
-                    <span key={genre.id} className="genre-tag">
-                      {genre.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="modal-section">
-                <h3>Overview</h3>
-                <p>{movieDetails.overview || "No overview available."}</p>
-              </div>
-
-              <div className="modal-grid">
-                <div className="modal-section">
-                  <h3>Release date</h3>
-                  <p>
-                    {new Date(movieDetails.release_date).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      },
+                  <div className="modal-info">
+                    <h1>{movieDetails.title}</h1>
+                    <div className="modal-meta">
+                      <span className="year">
+                        {movieDetails.release_date?.split("-")[0]}
+                      </span>
+                      <span className="rating">PG-13</span>
+                      <span className="runtime">
+                        {formatRuntime(movieDetails.runtime)}
+                      </span>
+                    </div>
+                    <div className="modal-rating">
+                      <img src="/star.svg" alt="Star" />
+                      <span>{movieDetails.vote_average?.toFixed(1)}</span>
+                      <span className="vote-count">
+                        ({movieDetails.vote_count?.toLocaleString()})
+                      </span>
+                    </div>
+                    {movieDetails.tagline && (
+                      <p className="tagline">{movieDetails.tagline}</p>
                     )}
-                  </p>
-                </div>
-
-                <div className="modal-section">
-                  <h3>Countries</h3>
-                  <p>
-                    {movieDetails.production_countries
-                      ?.map((country) => country.name)
-                      .join(", ") || "N/A"}
-                  </p>
-                </div>
-
-                <div className="modal-section">
-                  <h3>Status</h3>
-                  <p>{movieDetails.status}</p>
-                </div>
-
-                <div className="modal-section">
-                  <h3>Language</h3>
-                  <p>
-                    {movieDetails.spoken_languages
-                      ?.map((lang) => lang.english_name)
-                      .join(", ") || "N/A"}
-                  </p>
-                </div>
-
-                <div className="modal-section">
-                  <h3>Budget</h3>
-                  <p>
-                    {movieDetails.budget
-                      ? formatCurrency(movieDetails.budget)
-                      : "N/A"}
-                  </p>
-                </div>
-
-                <div className="modal-section">
-                  <h3>Revenue</h3>
-                  <p>
-                    {movieDetails.revenue
-                      ? formatCurrency(movieDetails.revenue)
-                      : "N/A"}
-                  </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="modal-section">
-                <h3>Production Companies</h3>
-                <div className="production-companies">
-                  {movieDetails.production_companies?.length > 0
-                    ? movieDetails.production_companies
-                        .map((company) => company.name)
-                        .join(" • ")
-                    : "N/A"}
+              {/* Content */}
+              <div className="modal-details">
+                <div className="modal-section">
+                  <h3>Genres</h3>
+                  <div className="genres">
+                    {movieDetails.genres?.map((genre) => (
+                      <span key={genre.id} className="genre-tag">
+                        {genre.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="modal-section">
+                  <h3>Overview</h3>
+                  <p>{movieDetails.overview || "No overview available."}</p>
+                </div>
+
+                <div className="modal-grid">
+                  <div className="modal-section">
+                    <h3>Release date</h3>
+                    <p>
+                      {new Date(movieDetails.release_date).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="modal-section">
+                    <h3>Countries</h3>
+                    <p>
+                      {movieDetails.production_countries
+                        ?.map((country) => country.name)
+                        .join(", ") || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="modal-section">
+                    <h3>Status</h3>
+                    <p>{movieDetails.status}</p>
+                  </div>
+
+                  <div className="modal-section">
+                    <h3>Language</h3>
+                    <p>
+                      {movieDetails.spoken_languages
+                        ?.map((lang) => lang.english_name)
+                        .join(", ") || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="modal-section">
+                    <h3>Budget</h3>
+                    <p>
+                      {movieDetails.budget
+                        ? formatCurrency(movieDetails.budget)
+                        : "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="modal-section">
+                    <h3>Revenue</h3>
+                    <p>
+                      {movieDetails.revenue
+                        ? formatCurrency(movieDetails.revenue)
+                        : "N/A"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="modal-section">
+                  <h3>Production Companies</h3>
+                  <div className="production-companies">
+                    {movieDetails.production_companies?.length > 0
+                      ? movieDetails.production_companies
+                          .map((company) => company.name)
+                          .join(" • ")
+                      : "N/A"}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="modal-error">
-            <p>Failed to load movie details</p>
-          </div>
-        )}
+          ) : (
+            <div className="modal-error">
+              <p>Failed to load movie details</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

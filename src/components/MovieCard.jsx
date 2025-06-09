@@ -13,12 +13,14 @@ function MovieCard({
       onCardClick(movie);
     }
   };
+  console.log("MovieCard rendered:", title, poster_path);
 
   return (
     <div className="movie-card" onClick={handleClick}>
       <img
         src={poster_path ? `${BASE_IMAGE_URL}${poster_path}` : DEFAULT_IMAGE}
-        alt={title}
+        alt={`${title} movie poster`}
+        loading="lazy"
       />
       <h3>{title}</h3>
       <div className="content">

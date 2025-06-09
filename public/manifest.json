@@ -1,0 +1,21 @@
+{
+  "name": "MovieFlex - Discover Your Next Favorite Movie",
+  "short_name": "MovieFlex",
+  "description": "Discover trending movies with advanced filtering, real-time search, and personalized recommendations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Movlix.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
