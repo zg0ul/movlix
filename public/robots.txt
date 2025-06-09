@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://movieflex.app/sitemap.xml
+Sitemap: https://movlix.zg0ul.com/sitemap.xml

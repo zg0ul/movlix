@@ -37,8 +37,8 @@
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/movieflex.git
-cd movieflex
+git clone https://github.com/zg0ul/movlix.git
+cd movlix
 ```
 
 2. Install dependencies

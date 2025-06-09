@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const baseUrl = "https://movieflex.app"; // Replace with your actual domain when deployed
+const baseUrl = "https://movlix.zg0ul.com"; // Replace with your actual domain when deployed
 
 const staticPages = ["", "/trending", "/search"];
 

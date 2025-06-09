@@ -9,13 +9,13 @@ function SEO({
   type = "website",
   movie = null,
 }) {
-  const defaultTitle = "MovieFlex - Discover Your Next Favorite Movie";
+  const defaultTitle = "Movlix - Discover Your Next Favorite Movie";
   const defaultDescription =
     "Discover trending movies with advanced filtering, real-time search, and personalized recommendations. Built with React and powered by TMDB API.";
   const defaultImage = "/Movlix.png"; // Using the specified thumbnail
-  const siteUrl = "https://movieflex.app"; // Replace with your actual URL when deployed
+  const siteUrl = "https://movlix.zg0ul.com"; // Replace with your actual URL when deployed
 
-  const seoTitle = title ? `${title} | MovieFlex` : defaultTitle;
+  const seoTitle = title ? `${title} | Movlix` : defaultTitle;
   const seoDescription = description || defaultDescription;
   const seoImage = image || defaultImage;
   const seoUrl = url || siteUrl;
@@ -42,7 +42,7 @@ function SEO({
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "MovieFlex",
+    name: "Movlix",
     url: siteUrl,
     description: defaultDescription,
     potentialAction: {
@@ -71,7 +71,7 @@ function SEO({
       <meta property="og:image" content={seoImage} />
       <meta property="og:url" content={seoUrl} />
       <meta property="og:type" content={type} />
-      <meta property="og:site_name" content="MovieFlex" />
+      <meta property="og:site_name" content="Movlix" />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -81,7 +81,7 @@ function SEO({
 
       {/* Additional Meta */}
       <meta name="robots" content="index, follow" />
-      <meta name="author" content="MovieFlex" />
+      <meta name="author" content="Movlix" />
       <link rel="canonical" href={seoUrl} />
 
       {/* Structured Data */}
