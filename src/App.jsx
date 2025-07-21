@@ -22,9 +22,22 @@ const API_OPTIONS = {
   },
 };
 
-// Utility function to filter out adult content as backup safety measure
+// Utility function to filter out adult and inappropriate content
 const filterAdultContent = (movies) => {
-  return movies.filter((movie) => !movie.adult);
+  const matureKeywords = ['intimacy', 'erotic', 'nude', 'sex', 'porn', 'xxx', 'adult', 'mature', 'explicit'];
+  
+  return movies.filter((movie) => {
+    // Filter out movies marked as adult
+    if (movie.adult) return false;
+    
+    // Filter out movies with mature content in title or overview
+    const title = (movie.title || '').toLowerCase();
+    const overview = (movie.overview || '').toLowerCase();
+    
+    return !matureKeywords.some(keyword => 
+      title.includes(keyword) || overview.includes(keyword)
+    );
+  });
 };
 
 function App() {
@@ -96,7 +109,9 @@ function App() {
         } else {
           // Discover movies with filters
           endpoint = `${API_BASE_URL}/discover/movie`;
-          params.append("sort_by", filters.sortBy);
+          
+          // Sort by release date first
+          params.append("sort_by", filters.sortBy || "primary_release_date.desc");
 
           if (filters.genre) {
             params.append("with_genres", filters.genre);
@@ -108,7 +123,23 @@ function App() {
 
           if (filters.minRating) {
             params.append("vote_average.gte", filters.minRating);
+          } else {
+            // Default minimum rating to filter out junk movies
+            params.append("vote_average.gte", "6.0"); // Increased from 5.0
           }
+
+          // Filter out movies without posters and ensure minimum vote count
+          params.append("vote_count.gte", "500"); // Increased from 100 for better quality
+          
+          // Only show movies from last 5 years for better relevance
+          const fiveYearsAgo = new Date();
+          fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
+          params.append("primary_release_date.gte", fiveYearsAgo.toISOString().split("T")[0]);
+          
+          params.append(
+            "primary_release_date.lte",
+            new Date().toISOString().split("T")[0],
+          ); // Ensure movies are not from the future
         }
 
         const response = await fetch(`${endpoint}?${params}`, API_OPTIONS);
@@ -127,8 +158,28 @@ function App() {
           return;
         }
 
-        // Filter out adult content as additional safety measure
-        const filteredMovies = filterAdultContent(data.results || []);
+        // Filter out adult content and low quality movies
+        let filteredMovies = filterAdultContent(data.results || [])
+          .filter(movie => 
+            movie.poster_path && // Has poster
+            movie.vote_average > 0 && // Has rating
+            movie.overview && // Has description
+            movie.overview.length > 50 // Substantial description
+          );
+
+        // Sort by release date descending, then by popularity descending within same year
+        filteredMovies.sort((a, b) => {
+          const dateA = new Date(a.release_date || '1900-01-01');
+          const dateB = new Date(b.release_date || '1900-01-01');
+          
+          // First sort by date (newest first)
+          if (dateA.getTime() !== dateB.getTime()) {
+            return dateB.getTime() - dateA.getTime();
+          }
+          
+          // If same date, sort by popularity (highest first)
+          return (b.popularity || 0) - (a.popularity || 0);
+        });
         setmovieList(filteredMovies);
         setTotalPages(Math.min(data.total_pages || 1, 500)); // TMDB limits to 500 pages
         setTotalResults(data.total_results || 0);
