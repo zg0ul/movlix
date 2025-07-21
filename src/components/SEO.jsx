@@ -11,7 +11,7 @@ function SEO({
 }) {
   const defaultTitle = "Movlix - Discover Your Next Favorite Movie";
   const defaultDescription =
-    "Discover trending movies with advanced filtering, real-time search, and personalized recommendations. Built with React and powered by TMDB API.";
+    "Discover trending movies with advanced filtering, real-time search, and personalized recommendations. Family-friendly movie discovery built with React and powered by TMDB API.";
   const defaultImage = "/Movlix.png"; // Using the specified thumbnail
   const siteUrl = "https://movlix.zg0ul.com"; // Replace with your actual URL when deployed
 
@@ -61,7 +61,7 @@ function SEO({
         name="keywords"
         content={
           keywords ||
-          "movies, film, cinema, trending, discover, react, tmdb, movie database, entertainment"
+          "movies, film, cinema, trending, discover, react, tmdb, movie database, entertainment, family-friendly"
         }
       />
 

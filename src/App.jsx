@@ -22,6 +22,11 @@ const API_OPTIONS = {
   },
 };
 
+// Utility function to filter out adult content as backup safety measure
+const filterAdultContent = (movies) => {
+  return movies.filter((movie) => !movie.adult);
+};
+
 function App() {
   const [searchTerm, setsearchTerm] = useState("");
   const [errorMessage, seterrorMessage] = useState(null);
@@ -81,6 +86,7 @@ function App() {
         let endpoint;
         const params = new URLSearchParams({
           page: page.toString(),
+          include_adult: "false", // Filter out adult content
         });
 
         if (query) {
@@ -121,7 +127,9 @@ function App() {
           return;
         }
 
-        setmovieList(data.results || []);
+        // Filter out adult content as additional safety measure
+        const filteredMovies = filterAdultContent(data.results || []);
+        setmovieList(filteredMovies);
         setTotalPages(Math.min(data.total_pages || 1, 500)); // TMDB limits to 500 pages
         setTotalResults(data.total_results || 0);
 

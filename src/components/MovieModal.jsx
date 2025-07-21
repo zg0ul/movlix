@@ -55,7 +55,7 @@ function MovieModal({ movie, isOpen, onClose }) {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `${API_BASE_URL}/movie/${movieId}?append_to_response=credits`,
+        `${API_BASE_URL}/movie/${movieId}?append_to_response=credits&include_adult=false`,
         API_OPTIONS,
       );
 
